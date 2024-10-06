@@ -1,5 +1,5 @@
 # LED Panel Tutorial
-Tutorial & resources on how to get a RGB LED eLED Screen working using a ESP32-WROOM-32 microcontroller.
+Tutorial & resources on how to get a RGB LED Screen working using a ESP32-WROOM-32 microcontroller and how to display gifs on it!
 
 > Disclaimer: I might have forgotten some steps as I tried a trillion different things to get this working so please let me know and I will fix any issues with the instructions :)  
 
@@ -55,4 +55,67 @@ You should see a device like /dev/tty.SLAB_USBtoUART. This means your ESP32 is c
 - Press the Upload button in the Arduino IDE. Wait a few seconds while the code compiles and uploads to your board. You will see a Blue LED blinking on the ESP32.
 
 ### Connecting the ESP32 to the LED screen
+
+**1. Connect the LED screen to power:** Plug in your power supply to a socket and the DC port from the power supply into the adapter. Then, into the adapter you will insert the power cable that came with the LED screen: the black power cable into the negative input and then the red cable to the positive input. Finally plug in one of the terminals to the power input terminal labelled +5V on the screen, the other terminal will be left unplugged.
+This picture shows the set up:
+
+**2. Connect the Dupont cables:** Connect the joint head of the Dupont cables to the input terminal labelled IN on the screen, like so:
+PICTURE
+
+**3. Connect the pins into the ESP32:** Finally, we need to connect the ends of the Dupont cables to the pins in the ESP32. I used the configuration detailed [here - under the ESP32 section](https://www.waveshare.com/wiki/RGB-Matrix-P2-64x64#Hardware_Connection_4).
+IMAGE
+
+Things to keep in mind (this might be obvious to some people but I was clueless before starting):
+- There are multiple GND (ground) pins, but you only need one, therefore there is a cable that will remain unplugged (that is normal).
+- I would follow the diagram exactly. If you get the same screen that I got, the Dupont cable colours match the colours in the diagram, which makes life so much easier.
+- The E pin is only required for 64x64 screens (which mine is), and so the pin you attach it to is optional (I put it on the GPIO32 following the wiki). Whatever pin you attach it to, there is a chance that you will have to explicitly state it in the code you then upload to the ESP32.
+
+It should look like this:
+IMAGE
+
+### Interacting with the screen
+
+**1. Install the required library:** We will be using [ESP32-HUB75-MatrixPanel-DMA](https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA) by mrcodetastic as this is suitable for HUB75 screens like ours and ESP32s. If you have any issues with your project, my tip is to look at the closed issues in their repository as someone else might have had the same issue and can provide a solution!
+To install this library, you can search "ESP32 HUB75 LED" in Arduino's Library Manager and install it. You will also have to install the "Adafruit_GFX" library.
+
+**2. Run a test sketch:**
+Run these two sketches, the first one will help you identify issues with your set up and the second one looks cool.
+- [Simple Test Shapes](https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/blob/master/examples/1_SimpleTestShapes/1_SimpleTestShapes.ino): if you have a 64x64 board like mine, remember to configure a valid E_PIN (as we discussed, I opted for GPIO 32). To do so, you can uncomment line 97 ```mxconfig.gpio.e = 18;``` and change the 18 to 32. You will also have to change line 10 ```#define PANEL_RES_Y 32``` to ```#define PANEL_RES_Y 64```
+- [Pattern Plasma](https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/blob/master/examples/2_PatternPlasma/2_PatternPlasma.ino): this sketch already is set up for 64x64 screens.
+
+## Uploading gifs to the screen
+Instructions adapted from the [ESP32-HUB75-MatrixPanel-DMA](https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/tree/master/examples/AnimatedGIFPanel_LittleFS) library.
+
+**1. Install the GIF library:** We will be using bitbank2's [AnimatedGIF library](https://github.com/bitbank2/AnimatedGIF) as a GIF decoder, install it by seraching for AnimatedGIF in Arduino's library manager. 
+
+**2. Install the LittleFS Plugin:** This is a filesystem that will let you access gifs stored inside the flash memory of the ESP32. Use this [tutorial](https://randomnerdtutorials.com/arduino-ide-2-install-esp32-littlefs/) to set it up. 
+
+**3. Choose a gif:** Choose a gif that matches the resolution of the screen (in our case 64x64). To resize a gif, you can use [ezgif.com](https://ezgif.com/). I used a gif of a 3D model of my monsterra that I created on Spline 3D, I've made the gif available under the assets/ folder in case you'd like to use it! As a side note, I had issues with transparent pixels so I would abstain from using transparent gifs.
+
+**4. Upload the gif (or multiple gifs!) to the LittleFS:** To do so, in the data/ folder you created in step 2, upload the gif you want to use, then in Arduino, press [⌘] + [Shift] + [P] on MacOS to open the command palette. Search for the Upload LittleFS to ESP32 command and click on it. After a few seconds, you should see the "Completed upload" message. If you get this error message “ERROR: No port specified, check IDE menus“, restart the Arduino IDE, and try again.
+
+**5. Upload the following code to your sketch:** Copy and paste the [code available on the library for animated gifs](https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/blob/master/examples/AnimatedGIFPanel_LittleFS/AnimatedGIFPanel_LittleFS.ino), you'll have to change a few things to enable it for 64x64 screens:
+- Change line 30 from ```#define PANEL_RES_Y 32``` to ```#define PANEL_RES_Y 64```
+- Uncomment line 222 ```mxconfig.gpio.e = 18;``` and change to ```mxconfig.gpio.e = 32;``` (or whatever E_PIN you used)
+
+I also had to change line 238 ```String gifDir = "/gifs";``` to ```String gifDir = "/";``` just because the structure of my project is simply:
+```
+project
+│   sketch.ino
+└───data
+│   │   gif_name.gif
+```
+
+
+
+-------
+
+And that should be it! If you have any problems, use chatgpt. Kiiiiidding, open an issue and I might be able to help out! Good luck and enjoy. Also if you do any cute projects please take pictures and post those too!
+Thanks a million to my TAGGG brother for getting me this kit for my bday and to all of the people creating open source libraries and tutorials for others to use <3.
+
+
+
+
+
+
 
