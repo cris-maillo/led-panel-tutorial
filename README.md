@@ -1,7 +1,11 @@
 # LED Panel Tutorial
 Tutorial & resources on how to get a RGB LED Screen working using a ESP32-WROOM-32 microcontroller and how to display gifs on it!
 
-> Disclaimer: I might have forgotten some steps as I tried a trillion different things to get this working so please let me know and I will fix any issues with the instructions :)  
+> Disclaimer: I might have forgotten some steps as I tried a trillion different things to get this working so please let me know and I will fix any issues with the instructions :)
+
+<p align="center">
+    <img src="https://github.com/cris-maillo/led-panel-tutorial/blob/main/assets/GIF%203.gif?raw=true" width="300" />
+</p>
 
 
 ## You will need:
@@ -66,13 +70,13 @@ You should see a device like /dev/tty.SLAB_USBtoUART. This means your ESP32 is c
 This picture shows the set up:
 
 <p align="center">
-    <img src="https://github.com/cris-maillo/led-panel-tutorial/blob/main/assets/power-config.png?raw=true" width="300" />
+    <img src="https://github.com/cris-maillo/led-panel-tutorial/blob/main/assets/power-config.jpeg?raw=true" width="300" />
 </p>
 
 **2. Connect the Dupont cables:** Connect the joint head of the Dupont cables to the input terminal labelled IN on the screen, like so:
 
 <p align="center">
-    <img src="https://github.com/cris-maillo/led-panel-tutorial/blob/main/assets/dupont-config.png?raw=true" width="300" />
+    <img src="https://github.com/cris-maillo/led-panel-tutorial/blob/main/assets/dupont-config.jpeg?raw=true" width="300" />
 </p>
 
 **3. Connect the pins into the ESP32:** Finally, we need to connect the ends of the Dupont cables to the pins in the ESP32. I used the configuration detailed [here - under the ESP32 section](https://www.waveshare.com/wiki/RGB-Matrix-P2-64x64#Hardware_Connection_4).
